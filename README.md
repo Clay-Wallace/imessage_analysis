@@ -28,5 +28,6 @@ In the digital age, text message data serves as the most robust repository of in
 ## Credits
 
 - Created by Clay Wallace
-- Rhetoric Analysis powered by GPT
+- Rhetoric Analysis and code-generation assistance powered by GPT
 - Ideation and technical assistance from Professor Mark Johson
+- iMessage and Contacts app data retrieval code adapted from Gold, K. (2023, July 27). Extract iMessage Data For Analytics and Conversational AI projects. Better Programming. https://medium.com/better-programming/extracting-imessage-and-address-book-data-b6e2e5729b21
