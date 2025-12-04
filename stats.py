@@ -68,8 +68,21 @@ def stat_overview(messages):
     print(f"\nUnique conversations: {unique_convos}")
     print(f" - Group chats: {len(group_chats)} ({percent_gc:.2f}%)")
 
+    return [earliest_msg, 
+            latest_msg, 
+            total, 
+            mesg_sent, 
+            percent_sent, 
+            recipients,
+            mesg_received, 
+            percent_received, 
+            senders,
+            unique_convos,
+            group_chats,
+            percent_gc
+    ]   
 
-    
+
 
 
 
