@@ -55,6 +55,20 @@ def stat_overview(messages):
             else: continue
     
     unique_convos = len(group_chats) + len(non_gc_convos)
+    percent_gc = (len(group_chats) / unique_convos) * 100 if unique_convos > 0 else 0
+
+    print("\niMessage Statistical Overview")
+    print("=" * 40)
+    print(f"\nTime period: {earliest_msg} to {latest_msg}")
+    print(f"\nTotal messages: {total}")
+    print(f"\nMessages sent: {mesg_sent} ({percent_sent:.2f}%)")
+    print(f" - Unique message recipients: {len(recipients)}")
+    print(f"\nMessages received: {mesg_received} ({percent_received:.2f}%)")
+    print(f" - Unique message senders: {len(senders)}")
+    print(f"\nUnique conversations: {unique_convos}")
+    print(f" - Group chats: {len(group_chats)} ({percent_gc:.2f}%)")
+
+
     
 
 

@@ -5,6 +5,7 @@ import venv
 import datetime
 import json
 import subprocess
+from stats import stat_overview
 
 def create_venv():
     venv_path = os.path.join(os.path.dirname(__file__), ".venv")
@@ -266,8 +267,7 @@ def main():
     recent_messages = load_message_data(20)
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
-    print(messages)
-
+    stat_overview(messages)
 
 if __name__ == "__main__":
     main()
