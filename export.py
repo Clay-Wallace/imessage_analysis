@@ -45,7 +45,7 @@ HTML_TEMPLATE = """
   <h2>Trends in User Messaging Behavior</h2>
 
   <div class="section">
-    <strong>Average message length:</strong> {avg_mesg_length}
+    <strong>Average message length:</strong> {avg_mesg_length} words
   </div>
 
   <div class="section">
@@ -66,7 +66,7 @@ HTML_TEMPLATE = """
   </div>
 
   <div class="section">
-    <strong>Average time it takes to respond:</strong> {average_response_time}
+    <strong>Average time it takes you to respond:</strong> {average_response_time}
   </div>
 </body>
 </html>

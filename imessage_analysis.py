@@ -114,15 +114,18 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
                         attributed_body = attributed_body[6:-12]
                         body = attributed_body
 
-        # Convert date from Apple epoch time to standard format using datetime module if human_readable_date is True  
+        APPLE_EPOCH_OFFSET = 978307200
         if human_readable_date:
-            date_string = '2001-01-01'
-            mod_date = datetime.datetime.strptime(date_string, '%Y-%m-%d')
-            unix_timestamp = int(mod_date.timestamp())*1000000000
-            new_date = int((date+unix_timestamp)/1000000000)
-            date = datetime.datetime.fromtimestamp(new_date).strftime("%Y-%m-%d %H:%M:%S")
+            if date > 1000000000000000:  
+                seconds_val = date / 1000000000
+            else:
+                seconds_val = date
 
-        mapping = get_chat_mapping(db_location)  # Get chat mapping from database location
+            final_timestamp = seconds_val + APPLE_EPOCH_OFFSET
+            
+            date = datetime.datetime.fromtimestamp(final_timestamp).strftime("%Y-%m-%d %H:%M:%S")
+
+        mapping = get_chat_mapping(db_location)  
 
         try:
             mapped_name = mapping[cache_roomname]
@@ -261,6 +264,7 @@ def main():
         sys.exit(0)
     print("Welcome to iMessage Analysis!")
     recent_messages = load_message_data(20)
+    print(recent_messages)
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
     
