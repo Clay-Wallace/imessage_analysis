@@ -42,7 +42,7 @@ HTML_TEMPLATE = """
   </div>
 
   
-  <h2>Trends in User Messaging Behavior</h2>
+  <h2>Trends in Your Messaging Behavior</h2>
 
   <div class="section">
     <strong>Average message length:</strong> {avg_mesg_length} words
