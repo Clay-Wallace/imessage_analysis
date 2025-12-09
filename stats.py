@@ -118,7 +118,7 @@ def get_msg_times(messages, is_from_me):
     total_messaeges = len(focus_messages)
     percent_top = (top_count / total_messaeges) * 100
 
-    return top_period, top_count, percent_top
+    return top_period, percent_top
 
 def get_attachment_percentage(messages):
     attachments = messages[messages["cache_has_attachments"] == 1].copy()
@@ -162,9 +162,9 @@ def habit_overivew(messages):
     
     avg_mesg_length = get_avg_message_length(messages)
 
-    sent_msg_period = get_msg_times(messages, 1)
+    sent_msg_period, sent_period_percent = get_msg_times(messages, 1)
 
-    rec_msg_period = get_msg_times(messages, 0)
+    rec_msg_period, rec_period_percent = get_msg_times(messages, 0)
 
     percent_attachments = get_attachment_percentage(messages)
 

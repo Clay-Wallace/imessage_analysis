@@ -264,9 +264,9 @@ def main():
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
     print(messages)
-    # overview_stats = stat_overview(messages)
+    overview_stats = stat_overview(messages)
 
-    # export_html_overview(*overview_stats)
+    export_html_overview(*overview_stats)
 
 
 if __name__ == "__main__":

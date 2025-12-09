@@ -38,6 +38,33 @@ HTML_TEMPLATE = """
     <br>
     - Group chats: {num_group_chats} ({percent_gc:.2f}%)
   </div>
+
+  
+  <h1>Trends in User Messaging Behavior</h1>
+
+  <div class="section">
+    <strong>Average message length:</strong> {avg_mesg_length}
+  </div>
+
+  <div class="section">
+    <strong>Time period with highest frequency of sent messages:</strong> {sent_msg_period}
+    <br>
+    - {sent_period_percent}% of messages sent during this time period
+  </div>
+
+  <div class="section">
+    <strong>Time period with highest frequency of sent messages:</strong> {rec_msg_period}
+    - {rec_period_percent}% of messages recieved during this time period
+    <br>
+  </div>
+
+  <div class="section">
+    <strong>Percentage of messages sent with attachments:</strong> {percent_attachments}%
+  </div>
+
+  <div class="section">
+    <strong>Average time it takes to respond:</strong> {average_response_time}
+  </div>
 </body>
 </html>
 """
@@ -55,6 +82,13 @@ def export_html_overview(
     unique_convos,
     group_chats,
     percent_gc,
+    avg_mesg_length,
+    sent_msg_period,
+    sent_period_percent,
+    rec_msg_period,
+    rec_period_percent,
+    percent_attachments,
+    average_response_time,
     path="imessage_overview.html",
 ):
     html = HTML_TEMPLATE.format(
@@ -70,6 +104,13 @@ def export_html_overview(
         unique_convos=unique_convos,
         num_group_chats=len(group_chats),
         percent_gc=percent_gc,
+        avg_mesg_length=avg_mesg_length,
+        sent_msg_period=sent_msg_period,
+        sent_period_percent=sent_period_percent,
+        rec_msg_period=rec_msg_period,
+        rec_period_percent=rec_period_percent,
+        percent_attachments=percent_attachments,
+        average_response_time=average_response_time,
     )
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
