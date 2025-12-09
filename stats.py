@@ -127,6 +127,36 @@ def get_attachment_percentage(messages):
 
     return percent_attachments
 
+def get_avg_user_response_time(messages):
+
+    no_gc_messages = messages[messages["cache_roomname": None]].copy()
+
+    df = pd.DataFrame(no_gc_messages)
+    df['date'] = pd.to_datetime(df['date'])
+
+    results = []
+    for phone_number, group in df.groupby("phone_number"):
+        group = group.sort_values("date")
+
+        prev_sender = group['is_from_me'].shift(1)
+        prev_date = group['date'].shift(1)
+        is_reply = (group['is_from_me'] == 1) & (prev_sender == 0)
+
+        reply_times = group.loc[is_reply, 'date'] - prev_date.loc[is_reply]
+
+        if not reply_times.empty:
+            avg_time = reply_times.mean()
+            results.append({
+                'phone_number': phone_number, 
+                'avg_reply_time': avg_time,
+                'reply_count': len(reply_times) 
+            })
+
+    results_df = pd.DataFrame(results)
+    average_response_time = results_df["avg_reply_time"].mean()
+
+    return average_response_time
+
 def habit_overivew(messages):
     """Generates an overview of user messaging habits"""
     
@@ -137,6 +167,8 @@ def habit_overivew(messages):
     rec_msg_period = get_msg_times(messages, 0)
 
     percent_attachments = get_attachment_percentage(messages)
+
+    average_response_time = get_avg_user_response_time(messages)
 
 
     
