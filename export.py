@@ -91,6 +91,8 @@ def export_html_overview(
     average_response_time,
     path="imessage_overview.html",
 ):
+    print("Constructing your personalized iMessage data report...")
+
     html = HTML_TEMPLATE.format(
         earliest_msg=earliest_msg,
         latest_msg=latest_msg,
@@ -114,4 +116,6 @@ def export_html_overview(
     )
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
+    
+    print("Report saved as 'imessage_overview.html'")
 

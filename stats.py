@@ -16,6 +16,7 @@ def get_earliest_and_latest(messages, sender=None):
 
 def stat_overview(messages):
     """Generates an overview of general statistics from iMessage data."""
+    print("Calculating statistical overview...")
 
     earliest, latest = get_earliest_and_latest(messages)
     earliest_msg = earliest["date"]
@@ -89,7 +90,7 @@ def get_avg_message_length(messages):
     message_count = 0
     for m in messages:
         if m.get("is_from_me") == 1:
-            message = m.split(" ")
+            message = m["body"].split(" ")
             total_message_length += len(message)
             message_count += 1
     average_message_length = total_message_length/message_count
@@ -98,12 +99,13 @@ def get_avg_message_length(messages):
 
 def get_msg_times(messages, is_from_me):
 
-    focus_messages = messages[messages["is_from_me"] == is_from_me].copy()
+    df = pd.DataFrame(messages)
+    focus_messages = df[df["is_from_me"] == int(is_from_me)].copy()
 
     if focus_messages.empty:
         return "N/A", 0, 0.0
 
-    hours = focus_messages["date"].dt.hour
+    hours = focus_messages["date_obj"].dt.hour
 
     periods = [0, 5, 9, 12, 17, 20, 24]
     labels = ["Early Morning", "Morning", "Prenoon", "Afternoon", "Evening", "Night"]
@@ -112,7 +114,7 @@ def get_msg_times(messages, is_from_me):
 
     period_counts = focus_messages["period"].value_counts()
 
-    top_period = period_counts.idmax()
+    top_period = period_counts.idxmax()
     top_count = period_counts.max()
 
     total_messaeges = len(focus_messages)
@@ -121,21 +123,23 @@ def get_msg_times(messages, is_from_me):
     return top_period, percent_top
 
 def get_attachment_percentage(messages):
-    attachments = messages[messages["cache_has_attachments"] == 1].copy()
 
-    percent_attachments = len(attachments)/len(messages)
+    df = pd.DataFrame(messages)
+    attachments = df[df["cache_has_attachments"] == 1].copy()
+
+    percent_attachments = len(attachments)/len(df)
 
     return percent_attachments
 
 def get_avg_user_response_time(messages):
 
-    no_gc_messages = messages[messages["cache_roomname": None]].copy()
+    df = pd.DataFrame(messages)
+    df_1 = df[df["cache_roomname"].isna()].copy()
 
-    df = pd.DataFrame(no_gc_messages)
-    df['date'] = pd.to_datetime(df['date'])
+    df_1['date'] = pd.to_datetime(df_1['date'])
 
     results = []
-    for phone_number, group in df.groupby("phone_number"):
+    for phone_number, group in df_1.groupby("phone_number"):
         group = group.sort_values("date")
 
         prev_sender = group['is_from_me'].shift(1)
@@ -160,6 +164,8 @@ def get_avg_user_response_time(messages):
 def habit_overivew(messages):
     """Generates an overview of user messaging habits"""
     
+    print("Calculating habit statistics...")
+
     avg_mesg_length = get_avg_message_length(messages)
 
     sent_msg_period, sent_period_percent = get_msg_times(messages, 1)
@@ -169,6 +175,16 @@ def habit_overivew(messages):
     percent_attachments = get_attachment_percentage(messages)
 
     average_response_time = get_avg_user_response_time(messages)
+
+    return [
+        avg_mesg_length,
+        sent_msg_period,
+        sent_period_percent,
+        rec_msg_period,
+        rec_period_percent,
+        percent_attachments,
+        average_response_time
+    ]
 
 
     

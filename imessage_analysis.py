@@ -5,7 +5,7 @@ import venv
 import datetime
 import json
 import subprocess
-from stats import stat_overview
+from stats import stat_overview, habit_overivew
 from export import export_html_overview
 
 def create_venv():
@@ -90,7 +90,7 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
 
     # Loop through each result row and unpack variables
     for result in results:
-        rowid, date, text, attributed_body, handle_id, is_from_me, cache_roomname, cache_has_attatchements = result
+        rowid, date, text, attributed_body, handle_id, is_from_me, cache_roomname, cache_has_attachments = result
 
         # Use self_number or handle_id as phone_number depending on whether it's a self-message or not
         phone_number = self_number if handle_id is None else handle_id
@@ -131,7 +131,7 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
 
         messages.append(
             {"rowid": rowid, "date": date, "body": body, "phone_number": phone_number, "is_from_me": is_from_me,
-             "cache_roomname": cache_roomname, 'group_chat_name' : mapped_name, "cache_has_attatchements": cache_has_attatchements})
+             "cache_roomname": cache_roomname, 'group_chat_name' : mapped_name, "cache_has_attachments": cache_has_attachments})
 
     conn.close()
     return messages
@@ -263,8 +263,10 @@ def main():
     recent_messages = load_message_data(20)
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
-    print(messages)
-    overview_stats = stat_overview(messages)
+    
+    overview_stats = []
+    overview_stats.extend(stat_overview(messages))
+    overview_stats.extend(habit_overivew(messages))
 
     export_html_overview(*overview_stats)
 
