@@ -60,17 +60,6 @@ def stat_overview(messages):
     unique_convos = len(group_chats) + len(non_gc_convos)
     percent_gc = (len(group_chats) / unique_convos) * 100 if unique_convos > 0 else 0
 
-    print("\niMessage Statistical Overview")
-    print("=" * 40)
-    print(f"\nTime period: {earliest_msg} to {latest_msg}")
-    print(f"\nTotal messages: {total}")
-    print(f"\nMessages sent: {mesg_sent} ({percent_sent:.2f}%)")
-    print(f" - Unique message recipients: {len(recipients)}")
-    print(f"\nMessages received: {mesg_received} ({percent_received:.2f}%)")
-    print(f" - Unique message senders: {len(senders)}")
-    print(f"\nUnique conversations: {unique_convos}")
-    print(f" - Group chats: {len(group_chats)} ({percent_gc:.2f}%)")
-
     return [earliest_msg, 
             latest_msg, 
             total, 
@@ -93,7 +82,7 @@ def get_avg_message_length(messages):
             message = m["body"].split(" ")
             total_message_length += len(message)
             message_count += 1
-    average_message_length = total_message_length/message_count
+    average_message_length = round(total_message_length/message_count, 2)
 
     return average_message_length
 
@@ -108,7 +97,7 @@ def get_msg_times(messages, is_from_me):
     hours = focus_messages["date_obj"].dt.hour
 
     periods = [0, 5, 9, 12, 17, 20, 24]
-    labels = ["Early Morning", "Morning", "Prenoon", "Afternoon", "Evening", "Night"]
+    labels = ["Early Morning (12 AM - 4:59 AM)", "Morning (5 AM - 8:59 AM)", "Prenoon (9 AM - 11:59 AM)", "Afternoon (12 PM - 4:59 PM)", "Evening (5 PM - 7:59 PM)", "Night (8 PM - 11:59 PM)"]
 
     focus_messages["period"] = pd.cut(hours, bins = periods, labels = labels, right = False, ordered = False)
 
@@ -118,7 +107,7 @@ def get_msg_times(messages, is_from_me):
     top_count = period_counts.max()
 
     total_messaeges = len(focus_messages)
-    percent_top = (top_count / total_messaeges) * 100
+    percent_top = round((top_count / total_messaeges) * 100, 2)
 
     return top_period, percent_top
 
@@ -127,7 +116,7 @@ def get_attachment_percentage(messages):
     df = pd.DataFrame(messages)
     attachments = df[df["cache_has_attachments"] == 1].copy()
 
-    percent_attachments = len(attachments)/len(df)
+    percent_attachments = round(len(attachments)/len(df), 2)
 
     return percent_attachments
 
@@ -159,7 +148,28 @@ def get_avg_user_response_time(messages):
     results_df = pd.DataFrame(results)
     average_response_time = results_df["avg_reply_time"].mean()
 
-    return average_response_time
+    components = average_response_time.components
+
+    days = components.days
+    hours = components.hours
+    minutes = components.minutes
+    seconds = components.seconds
+
+    response_time = []
+    if days > 0:
+        response_time.append(f"{days} days")
+    if hours > 0:
+        response_time.append(f"{hours} hours")
+    if minutes > 0:
+        response_time.append(f"{minutes} minutes")
+    if seconds > 0:
+        response_time.append(f"{seconds} seconds")
+    if not days and not hours and not minutes and not seconds:
+        response_time.append("ERROR")
+
+    response_time_str = ", ".join(response_time)
+
+    return response_time_str
 
 def habit_overivew(messages):
     """Generates an overview of user messaging habits"""

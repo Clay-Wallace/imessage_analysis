@@ -3,7 +3,7 @@ HTML_TEMPLATE = """
 <html>
 <head>
   <meta charset="utf-8">
-  <title>iMessage Statistical Overview</title>
+  <title>iMessage Analysis Report</title>
   <style>
     body {{ font-family: Arial, sans-serif; margin: 20px; }}
     h1 {{ border-bottom: 1px solid #ccc; padding-bottom: 5px; }}
@@ -11,7 +11,9 @@ HTML_TEMPLATE = """
   </style>
 </head>
 <body>
-  <h1>iMessage Statistical Overview</h1>
+  <h1>iMessage Analysis Report</h1>
+
+  <h2>Statistical Overview</h2>
 
   <div class="section">
     <strong>Time period:</strong> {earliest_msg} to {latest_msg}
@@ -40,7 +42,7 @@ HTML_TEMPLATE = """
   </div>
 
   
-  <h1>Trends in User Messaging Behavior</h1>
+  <h2>Trends in User Messaging Behavior</h2>
 
   <div class="section">
     <strong>Average message length:</strong> {avg_mesg_length}
@@ -54,6 +56,7 @@ HTML_TEMPLATE = """
 
   <div class="section">
     <strong>Time period with highest frequency of sent messages:</strong> {rec_msg_period}
+    <br>
     - {rec_period_percent}% of messages recieved during this time period
     <br>
   </div>
@@ -89,7 +92,7 @@ def export_html_overview(
     rec_period_percent,
     percent_attachments,
     average_response_time,
-    path="imessage_overview.html",
+    path="imessage_report.html",
 ):
     print("Constructing your personalized iMessage data report...")
 
@@ -117,5 +120,5 @@ def export_html_overview(
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
     
-    print("Report saved as 'imessage_overview.html'")
+    print(f"Report saved as '{path}'")
 
