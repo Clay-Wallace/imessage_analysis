@@ -5,9 +5,9 @@ HTML_TEMPLATE = """
   <meta charset="utf-8">
   <title>iMessage Statistical Overview</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-    .section { margin-top: 15px; }
+    body {{ font-family: Arial, sans-serif; margin: 20px; }}
+    h1 {{ border-bottom: 1px solid #ccc; padding-bottom: 5px; }}
+    .section {{ margin-top: 15px; }}
   </style>
 </head>
 <body>
