@@ -74,7 +74,7 @@ def get_msg_times(messages, is_from_me):
     focus_messages = df[df["is_from_me"] == int(is_from_me)].copy()
 
     if focus_messages.empty:
-        return "N/A", 0, 0.0
+        return "N/A", 0
 
     hours = focus_messages["date_obj"].dt.hour
 
@@ -103,32 +103,48 @@ def get_attachment_percentage(messages):
     return percent_attachments
 
 def get_avg_user_response_time(messages):
-
+    
     df = pd.DataFrame(messages)
     df_1 = df[df["cache_roomname"].isna()].copy()
 
-    df_1['date'] = pd.to_datetime(df_1['date'])
+    df_1['date_obj'] = pd.to_datetime(df_1['date_obj'])
 
-    results = []
-    for phone_number, group in df_1.groupby("phone_number"):
-        group = group.sort_values("date")
+    is_single_convo = (
+            (df['phone_number'].nunique() <= 1) and 
+            (df['cache_roomname'].isna().all())
+        )
+        
+    if is_single_convo:
+        df = df.sort_values("date_obj")
+        prev_sender = df['is_from_me'].shift(1)
+        prev_date = df['date_obj'].shift(1)
+        is_reply = (df['is_from_me'] == 1) & (prev_sender == 0)
+        reply_times = df.loc[is_reply, 'date_obj'] - prev_date.loc[is_reply]
+    else:
+        results = []
+        for phone_number, group in df_1.groupby("phone_number"):
+            group = group.sort_values("date_obj")
+            prev_sender = group['is_from_me'].shift(1)
+            prev_date = group['date_obj'].shift(1)
+            is_reply = (group['is_from_me'] == 1) & (prev_sender == 0)
+            reply_times = group.loc[is_reply, 'date_obj'] - prev_date.loc[is_reply]
 
-        prev_sender = group['is_from_me'].shift(1)
-        prev_date = group['date'].shift(1)
-        is_reply = (group['is_from_me'] == 1) & (prev_sender == 0)
+            if not reply_times.empty:
+                # avg_time = reply_times.mean()
+                # results.append({
+                #     'phone_number': phone_number, 
+                #     'avg_reply_time': avg_time,
+                #     'reply_count': len(reply_times) 
+                # })
+                results.append(reply_times)
+        if not results:
+            return "No replies found"
+        reply_times = pd.concat(results)
+    
+    if reply_times.empty:
+        return "No replies found"
 
-        reply_times = group.loc[is_reply, 'date'] - prev_date.loc[is_reply]
-
-        if not reply_times.empty:
-            avg_time = reply_times.mean()
-            results.append({
-                'phone_number': phone_number, 
-                'avg_reply_time': avg_time,
-                'reply_count': len(reply_times) 
-            })
-
-    results_df = pd.DataFrame(results)
-    average_response_time = results_df["avg_reply_time"].mean()
+    average_response_time = reply_times.mean()
 
     components = average_response_time.components
 
@@ -146,8 +162,8 @@ def get_avg_user_response_time(messages):
         response_time.append(f"{minutes} min")
     if seconds > 0:
         response_time.append(f"{seconds} sec")
-    if not days and not hours and not minutes and not seconds:
-        response_time.append("ERROR")
+    if not response_time:
+        response_time.append("<1 second")
 
     response_time_str = " ".join(response_time)
 

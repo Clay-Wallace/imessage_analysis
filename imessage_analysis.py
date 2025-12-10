@@ -23,7 +23,7 @@ def create_venv():
 
     print(f"To activate the virtual environment, run:\nsource {activate_script}\nAfterwards, rerun this program.")
 
-def load_message_data(n):
+def load_message_data(n=None):
     """Retrieve local iMessage data and load for analysis"""
     if not check_user_permissions():
         prompt_for_permission()
@@ -82,11 +82,12 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
     SELECT message.ROWID, message.date, message.text, message.attributedBody, handle.id, message.is_from_me, message.cache_roomnames, message.cache_has_attachments
     FROM message
     LEFT JOIN handle ON message.handle_id = handle.ROWID
+    ORDER BY message.date DESC
     """
+
     if n is not None:
-        query += f" ORDER BY message.date DESC LIMIT {n}"
-    else:
-        query += f" ORDER BY message.date DESC"
+        query += f" LIMIT {n}"
+    
     results = cursor.execute(query).fetchall()
     
     # Initialize an empty list for messages
@@ -280,9 +281,7 @@ def main():
     if not os.path.exists(os.path.join(os.path.dirname(__file__), ".venv")):
         sys.exit(0)
     print("Welcome to iMessage Analysis!")
-    recent_messages = load_message_data(20)
-    print(recent_messages)
-
+    recent_messages = load_message_data()
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
     
