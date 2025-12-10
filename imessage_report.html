@@ -8,6 +8,14 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { border-bottom: 1px solid #ccc; padding-bottom: 5px; }
     .section { margin-top: 15px; }
+    .container {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    }
+    .container > div {
+        flex: 1;
+    }
     table {
             width: 100%;
             border-collapse: collapse;
@@ -53,60 +61,65 @@
 <body>
   <h1>iMessage Analysis Report</h1>
 
-  <h2>Statistical Overview</h2>
+  <div class="container">
+    <div>
+      <h2>Statistical Overview</h2>
 
-  <div class="section">
-    <strong>Time period:</strong> 2024-12-10 10:58:50 to 2025-12-10 16:59:33
-  </div>
+      <div class="section">
+        <strong>Time period:</strong> 2024-12-10 10:58:50 to 2025-12-10 16:59:33
+      </div>
 
-  <div class="section">
-    <strong>Total messages:</strong> 40355
-  </div>
+      <div class="section">
+        <strong>Total messages:</strong> 40355
+      </div>
 
-  <div class="section">
-    <strong>Messages sent:</strong> 15182 (37.62%)
-    <br>
-    - Unique message recipients: 123
-  </div>
+      <div class="section">
+        <strong>Messages sent:</strong> 15182 (37.62%)
+        <br>
+        - Unique message recipients: 123
+      </div>
 
-  <div class="section">
-    <strong>Messages received:</strong> 25173 (62.38%)
-    <br>
-    - Unique message senders: 185
-  </div>
+      <div class="section">
+        <strong>Messages received:</strong> 25173 (62.38%)
+        <br>
+        - Unique message senders: 185
+      </div>
 
-  <div class="section">
-    <strong>Unique conversations:</strong> 254
-    <br>
-    - Group chats: 115 (45.28%)
-  </div>
+      <div class="section">
+        <strong>Unique conversations:</strong> 254
+        <br>
+        - Group chats: 115 (45.28%)
+      </div>
+    </div>
 
-  
-  <h2>Trends in Your Messaging Behavior</h2>
+    <div>
+      <h2>Trends in Your Messaging Behavior</h2>
 
-  <div class="section">
-    <strong>Average message length:</strong> 11.11 words
-  </div>
+      <div class="section">
+        <strong>Average message length:</strong> 11.11 words
+      </div>
 
-  <div class="section">
-    <strong>Time period with highest frequency of sent messages:</strong> Afternoon (12 PM - 4:59 PM)
-    <br>
-    - 37.74% of messages sent during this time period
-  </div>
+      <div class="section">
+        <strong>Time period with highest frequency of sent messages:</strong> Afternoon (12 PM - 4:59 PM)
+        <br>
+        - 37.74% of messages sent during this time period
+      </div>
 
-  <div class="section">
-    <strong>Time period with highest frequency of sent messages:</strong> Afternoon (12 PM - 4:59 PM)
-    <br>
-    - 37.52% of messages recieved during this time period
-    <br>
-  </div>
+      <div class="section">
+        <strong>Time period with highest frequency of sent messages:</strong> Afternoon (12 PM - 4:59 PM)
+        <br>
+        - 37.52% of messages recieved during this time period
+        <br>
+      </div>
 
-  <div class="section">
-    <strong>Percentage of messages sent with attachments:</strong> 0.07%
-  </div>
+      <div class="section">
+        <strong>Percentage of messages sent with attachments:</strong> 0.07%
+      </div>
 
-  <div class="section">
-    <strong>Median time it takes you to respond:</strong> 4 min 46 sec
+      <div class="section">
+        <strong>Median time it takes you to respond:</strong> 4 min 46 sec
+      </div>
+    </div>
   </div>
 
   <div class="section">
