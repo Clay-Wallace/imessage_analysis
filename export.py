@@ -8,6 +8,46 @@ HTML_TEMPLATE = """
     body {{ font-family: Arial, sans-serif; margin: 20px; }}
     h1 {{ border-bottom: 1px solid #ccc; padding-bottom: 5px; }}
     .section {{ margin-top: 15px; }}
+    table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }}
+
+        th {{
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #34495e;
+        }}
+
+        td {{
+            padding: 10px 12px;
+            border-right: 1px solid #ecf0f1;
+            border-bottom: 1px solid #ecf0f1;
+        }}
+
+        td:last-child {{
+            border-right: none;
+        }}
+
+        tbody tr:nth-child(even) {{
+            background-color: #f8f9fa;
+        }}
+
+        tbody tr:hover {{
+            background-color: #e8f4f8;
+            transition: background-color 0.2s ease;
+        }}
+
+        td:first-child {{
+            font-weight: 600;
+            color: #2c3e50;
+        }}
   </style>
 </head>
 <body>
@@ -66,12 +106,13 @@ HTML_TEMPLATE = """
   </div>
 
   <div class="section">
-    <strong>Average time it takes you to respond:</strong> {average_response_time}
+    <strong>Median time it takes you to respond:</strong> {average_response_time}
   </div>
 
   <div class="section">
     <h2>Your Social Network</h2>
     <strong>Everything you need to know about your top 10 conversations<strong>
+    <br>
     <table>
         <thead>
             <tr>
@@ -81,7 +122,7 @@ HTML_TEMPLATE = """
                 <th>Sent Messages</th>
                 <th>Received Messages</th>
                 <th>Average Length</th>
-                <th>Average Reply Time</th>
+                <th>Median Reply Time</th>
                 <th>Top Sent Time</th>
                 <th>Top Received Time</th>
                 <th>Attachments</th>
