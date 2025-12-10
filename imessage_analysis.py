@@ -272,7 +272,7 @@ def combine_data(recent_messages, contacts):
                 message["last_name"] = " ".join(parts[1:])
     
     df = pd.DataFrame(recent_messages)
-    df["convo_id"] = df["cache_roomname"].fillna(df["name"])
+    df["convo_id"] = df["group_chat_name"].replace("", pd.NA).fillna(df["cache_roomname"]).fillna(df["name"])
 
     return df
 

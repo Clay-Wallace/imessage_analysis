@@ -88,8 +88,8 @@ def get_msg_times(messages, is_from_me):
     top_period = period_counts.idxmax()
     top_count = period_counts.max()
 
-    total_messaeges = len(focus_messages)
-    percent_top = round((top_count / total_messaeges) * 100, 2)
+    total_messages = len(focus_messages)
+    percent_top = round((top_count / total_messages) * 100, 2)
 
     return top_period, percent_top
 
@@ -144,7 +144,7 @@ def get_avg_user_response_time(messages):
     if reply_times.empty:
         return "No replies found"
 
-    average_response_time = reply_times.mean()
+    average_response_time = reply_times.median()
 
     components = average_response_time.components
 
@@ -171,8 +171,6 @@ def get_avg_user_response_time(messages):
 
 def habit_overivew(messages):
     """Generates an overview of user messaging habits"""
-    
-    print("Calculating habit statistics...")
 
     avg_mesg_length = get_avg_message_length(messages)
 
@@ -204,7 +202,7 @@ def social_network(messages):
         convo_mask = df["convo_id"] == name
         convo_df = df[convo_mask]
         
-        is_group_chat = 1 if convo_df["cache_roomname"].notna().any() else 0
+        is_group_chat = "(Group chat)" if convo_df["cache_roomname"].notna().any() else ""
         
         earliest_msg = convo_df["date_obj"].min()
         latest_msg = convo_df["date_obj"].max()
