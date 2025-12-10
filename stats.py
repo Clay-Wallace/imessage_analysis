@@ -9,9 +9,6 @@ def get_earliest_and_latest(messages, sender=None):
     else:
         filtered = messages
 
-    if not filtered:
-        raise ValueError(f"No messages found for sender: {sender}")
-
     earliest = filtered["date_obj"].min()
     latest   = filtered["date_obj"].max()
     return earliest, latest
@@ -20,50 +17,27 @@ def stat_overview(messages):
     """Generates an overview of general statistics from iMessage data."""
     print("Calculating statistical overview...")
 
-    earliest, latest = get_earliest_and_latest(messages)
-    earliest_msg = earliest["date"]
-    latest_msg = latest["date"]
+    df = pd.DataFrame(messages)
 
-    total = len(messages)
+    earliest, latest = get_earliest_and_latest(df)
 
-    mesg_sent = sum(1 for m in messages if m.get("is_from_me"))
+    total = len(df)
+    mesg_sent = (df["is_from_me"] == 1).sum()
     mesg_received = total - mesg_sent
     percent_sent = (mesg_sent / total) * 100 if total > 0 else 0
     percent_received = 100 - percent_sent
 
-    senders = set()
-    for m in messages:
-        if m.get("is_from_me") == 0:
-            if m.get("phone_number") not in senders:
-                senders.add(m.get("phone_number"))
-            else: continue
     
-    recipients = set()
-    for m in messages:
-        if m.get("is_from_me") == 1:
-            if m.get("phone_number") not in recipients:
-                recipients.add(m.get("phone_number"))
-            else: continue
-
-    group_chats = set()
-    for m in messages:
-        if m.get("cache_roomname"):
-            if m.get("cache_roomname") not in group_chats:
-                group_chats.add(m.get("cache_roomname"))
-            else: continue
-
-    non_gc_convos = set()
-    for m in messages:
-        if not m.get("cache_roomname"):
-            if m.get("phone_number") not in non_gc_convos:
-                non_gc_convos.add(m.get("phone_number"))
-            else: continue
-    
+    senders = set(df[df["is_from_me"] == 0]["phone_number"].dropna().unique())
+    recipients = set(df[df["is_from_me"] == 1]["phone_number"].dropna().unique())
+    group_chats = set(df[df["cache_roomname"].notna()]["cache_roomname"].unique())
+    non_gc_convos = set(df[df["cache_roomname"].isna()]["phone_number"].dropna().unique())
+   
     unique_convos = len(group_chats) + len(non_gc_convos)
     percent_gc = (len(group_chats) / unique_convos) * 100 if unique_convos > 0 else 0
 
-    return [earliest_msg, 
-            latest_msg, 
+    return [earliest, 
+            latest, 
             total, 
             mesg_sent, 
             percent_sent, 

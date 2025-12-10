@@ -238,7 +238,6 @@ end tell
         json.dump(contacts, f)
     return contacts
 
-
 def combine_data(recent_messages, contacts):
     """
     recent_messages: list of dicts with at least "phone_number"

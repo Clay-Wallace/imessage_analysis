@@ -71,21 +71,19 @@ HTML_TEMPLATE = """
 
   <div class="section">
     <h2>Your Social Network</h2>
-    <strong>These are your top 10 conversations<strong>
+    <strong>Everything you need to know about your top 10 conversations<strong>
     <table>
         <thead>
             <tr>
                 <th>Rank</th>
                 <th>Name</th>
-                <th>Total Msgs</th>
-                <th>Sent</th>
-                <th>Received</th>
-                <th>Avg Length</th>
-                <th>Avg Reply Time</th>
-                
-                <!-- NEW HEADERS -->
+                <th>Total Messages</th>
+                <th>Sent Messages</th>
+                <th>Received Messages</th>
+                <th>Average Length</th>
+                <th>Average Reply Time</th>
                 <th>Top Sent Time</th>
-                <th>Top Rec Time</th>
+                <th>Top Received Time</th>
                 <th>Attachments</th>
             </tr>
         </thead>
@@ -167,6 +165,7 @@ def export_html_overview(
         rec_period_percent=rec_period_percent,
         percent_attachments=percent_attachments,
         average_response_time=average_response_time,
+        top_contacts_rows=rows_html,
     )
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
