@@ -7,6 +7,7 @@ import json
 import subprocess
 from stats import stat_overview, habit_overivew
 from export import export_html_overview
+import pandas as pd
 
 def create_venv():
     venv_path = os.path.join(os.path.dirname(__file__), ".venv")
@@ -83,6 +84,8 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
     """
     if n is not None:
         query += f" ORDER BY message.date DESC LIMIT {n}"
+    else:
+        query += f" ORDER BY message.date DESC"
     results = cursor.execute(query).fetchall()
     
     # Initialize an empty list for messages
@@ -136,8 +139,11 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
             {"rowid": rowid, "date": date, "body": body, "phone_number": phone_number, "is_from_me": is_from_me,
              "cache_roomname": cache_roomname, 'group_chat_name' : mapped_name, "cache_has_attachments": cache_has_attachments})
 
+        df = pd.DataFrame(messages)
+        df["convo_id"] = df["cache_roomname"].fillna(df["name"])
+
     conn.close()
-    return messages
+    return df
 
 def print_messages(messages):
     # Borrowed from Kelly Gold on Medium
@@ -265,6 +271,7 @@ def main():
     print("Welcome to iMessage Analysis!")
     recent_messages = load_message_data(20)
     print(recent_messages)
+
     addressBookData = get_contacts_from_contacts_app()
     messages = combine_data(recent_messages, addressBookData)
     
