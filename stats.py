@@ -165,17 +165,17 @@ def get_avg_user_response_time(messages):
 
     response_time = []
     if days > 0:
-        response_time.append(f"{days} days")
+        response_time.append(f"{days} day")
     if hours > 0:
-        response_time.append(f"{hours} hours")
+        response_time.append(f"{hours} hr")
     if minutes > 0:
-        response_time.append(f"{minutes} minutes")
+        response_time.append(f"{minutes} min")
     if seconds > 0:
-        response_time.append(f"{seconds} seconds")
+        response_time.append(f"{seconds} sec")
     if not days and not hours and not minutes and not seconds:
         response_time.append("ERROR")
 
-    response_time_str = ", ".join(response_time)
+    response_time_str = " ".join(response_time)
 
     return response_time_str
 
@@ -214,7 +214,7 @@ def social_network(messages):
         convo_mask = df["convo_id"] == name
         convo_df = df[convo_mask]
         
-        is_group_chat = "(Group Chat)" if convo_df["cache_roomname"].notna().any() else None
+        is_group_chat = 1 if convo_df["cache_roomname"].notna().any() else 0
         
         earliest_msg = convo_df["date_obj"].min()
         latest_msg = convo_df["date_obj"].max()
@@ -228,7 +228,7 @@ def social_network(messages):
         habits = habit_overivew(convo_df)
         
         new_row = {
-            "name": ,
+            "name": name,
             "total_count": total_count, 
             "is_group_chat": is_group_chat, 
             "earliest_msg": earliest_msg, 
@@ -247,6 +247,8 @@ def social_network(messages):
         }
 
         top_contacts.append(new_row)
+    
+    return top_contacts
         
 
 

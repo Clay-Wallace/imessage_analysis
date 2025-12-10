@@ -68,6 +68,32 @@ HTML_TEMPLATE = """
   <div class="section">
     <strong>Average time it takes you to respond:</strong> {average_response_time}
   </div>
+
+  <div class="section">
+    <h2>Your Social Network</h2>
+    <strong>These are your top 10 conversations<strong>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Total Msgs</th>
+                <th>Sent</th>
+                <th>Received</th>
+                <th>Avg Length</th>
+                <th>Avg Reply Time</th>
+                
+                <!-- NEW HEADERS -->
+                <th>Top Sent Time</th>
+                <th>Top Rec Time</th>
+                <th>Attachments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {top_contacts_rows}
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
 """
@@ -92,9 +118,34 @@ def export_html_overview(
     rec_period_percent,
     percent_attachments,
     average_response_time,
+    top_contacts,
     path="imessage_report.html",
 ):
     print("Constructing your personalized iMessage data report...")
+
+    rows_html = ""
+    for rank, contact in enumerate(top_contacts, 1):
+        # Format the average response time nicely
+        # (Assuming you have a helper like format_timedelta, otherwise use str())
+        resp_time_str = str(contact['average_response_time']) 
+        
+        row = f"""
+        <tr>
+            <td>#{rank}</td>
+            <td>
+                <strong>{contact['name']}</strong> {contact['is_group_chat']}
+            </td>
+            <td>{contact['total_count']:,}</td>
+            <td>{contact['mesg_sent']:,} ({contact['percent_sent']:.1f}%)</td>
+            <td>{contact['mesg_received']:,} ({contact['percent_received']:.1f}%)</td>
+            <td>{contact['avg_mesg_length']} words</td>
+            <td>{contact["average_response_time"]}</td>
+            <td>{contact['sent_msg_period']} ({contact['sent_period_percent']:.0f}%)</td>
+            <td>{contact['rec_msg_period']} ({contact['rec_period_percent']:.0f}%)</td>
+            <td>{contact['percent_attachments']:.1f}%</td>
+        </tr>
+        """
+        rows_html += row
 
     html = HTML_TEMPLATE.format(
         earliest_msg=earliest_msg,
