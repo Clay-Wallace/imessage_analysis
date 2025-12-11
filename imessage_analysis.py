@@ -24,13 +24,24 @@ def load_message_data(n=None):
 def check_user_permissions():
     """Check if iMessage data can be loaded"""
     message_db = os.path.expanduser("~/Library/Messages/chat.db")
+
+    if not message_db:
+        manual = input("iMessage data not found. Do you want to manually enter the filepath of your iMessage database? (Y or N) ")
+        if manual.strip().lower() == "y":
+            message_db = input("Please enter the filepath: ")
+        else:
+            print("Filepath not entered. Thank you for using iMessage Analysis.")
+            sys.exit(0)
     
     try:
         conn = sqlite3.connect(message_db)
         conn.close()
         return True
-    except (sqlite3.OperationalError, PermissionError):
+    except (PermissionError):
         return False
+    except (sqlite3.OperationalError):
+        print("iMessage database filepath invalid. Thank you for using iMessage Analysis.")
+        sys.exit(1)
     
 def prompt_for_permission():
     """Promt the user the enable disk access for Terminal"""
@@ -41,7 +52,7 @@ def prompt_for_permission():
     print("\nPlease follow these steps to grant access:\n")
     print("1. Open System Settings")
     print("2. Go to Privacy & Security → Full Disk Access")
-    print("3. Your user interface may vary depending on your active version of MacOS. Enable Access for Terminal. If not listed, click the '+' symbol, navigate to Applications → Utilities → Terminal, and add Terminal")
+    print("3. Your user interface may vary depending on your active version of MacOS. Enable access for Terminal. If not listed, click the '+' symbol, navigate to Applications → Utilities → Terminal, and add Terminal")
     print("4. Restart Terminal")
     print("\nAfter completing these steps, run this script again.")
     print("="*60 + "\n")
@@ -77,17 +88,13 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
     
     results = cursor.execute(query).fetchall()
     
-    # Initialize an empty list for messages
     messages = []
 
-    # Loop through each result row and unpack variables
     for result in results:
         rowid, date, text, attributed_body, handle_id, is_from_me, cache_roomname, cache_has_attachments = result
 
-        # Use self_number or handle_id as phone_number depending on whether it's a self-message or not
         phone_number = self_number if handle_id is None else handle_id
 
-        # Use text or attributed_body as body depending on whether it's a plain text or rich media message
         if text is not None:
             body = text
         
@@ -95,7 +102,6 @@ def read_messages(n, self_number='Me', human_readable_date=True, db_location=os.
             continue
         
         else: 
-            # Decode and extract relevant information from attributed_body using string methods 
             attributed_body = attributed_body.decode('utf-8', errors='replace')
             if "NSNumber" in str(attributed_body):
                 attributed_body = str(attributed_body).split("NSNumber")[0]
