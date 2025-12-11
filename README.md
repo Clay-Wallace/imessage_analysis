@@ -13,6 +13,12 @@ In the digital age, text message data serves as the most robust repository of in
     - Habit Overview (temporal analysis, average message length, media, etc.)
     - Social Network (summary and habit data for your top 10 correspondents)
 
+## Potential Future Features
+
+- AI-driven rhetoric and sentiment analysis
+- Longitudal data vizualizations to show change in habits over time
+- Network analysis vizualizations to map which of your correspondents know each other
+
 ## Installation
 
 1. Download repository
