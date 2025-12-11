@@ -10,19 +10,6 @@ from export import export_html_overview
 import pandas as pd
 from pathlib import Path
 
-def create_venv():
-    venv_path = os.path.join(os.path.dirname(__file__), ".venv")
-    if os.path.exists(venv_path):
-        return
-
-    venv.create(venv_path, with_pip=True)
-    print("Virtual environment created at:", venv_path)
-
-    if sys.platform == "darwin":
-        activate_script = os.path.join(venv_path, "bin", "activate")
-
-    print(f"To activate the virtual environment, run:\nsource {activate_script}\nAfterwards, rerun this program.")
-
 def load_message_data(n=None):
     """Retrieve local iMessage data and load for analysis"""
     if not check_user_permissions():
@@ -277,9 +264,6 @@ def combine_data(recent_messages, contacts):
     return df
 
 def main():
-    create_venv()
-    if not os.path.exists(os.path.join(os.path.dirname(__file__), ".venv")):
-        sys.exit(0)
     print("Welcome to iMessage Analysis!")
     recent_messages = load_message_data()
     addressBookData = get_contacts_from_contacts_app()
