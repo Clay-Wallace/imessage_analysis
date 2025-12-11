@@ -1,0 +1,1 @@
+# This project only uses the Python standard library and Pandas library. Python 3.10 or later is needed. The requirements are detailed within the setup instructions in the README.

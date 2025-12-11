@@ -36,11 +36,8 @@ def check_user_permissions():
         conn = sqlite3.connect(message_db)
         conn.close()
         return True
-    except (PermissionError):
+    except (PermissionError, sqlite3.OperationalError):
         return False
-    except (sqlite3.OperationalError):
-        print("iMessage database filepath invalid. Thank you for using iMessage Analysis.")
-        sys.exit(1)
     
 def prompt_for_permission():
     """Promt the user the enable disk access for Terminal"""
@@ -53,7 +50,7 @@ def prompt_for_permission():
     print("2. Go to Privacy & Security → Full Disk Access")
     print("3. Your user interface may vary depending on your active version of MacOS. Enable access for Terminal. If not listed, click the '+' symbol, navigate to Applications → Utilities → Terminal, and add Terminal")
     print("4. Restart Terminal")
-    print("\nAfter completing these steps, run this script again.")
+    print("\nAfter completing these steps, run this script again. If you continue to recieve this error after enabling permissions, then there is an issue with your iMessage database filepath.")
     print("="*60 + "\n")
 
 def get_chat_mapping(db_location=os.path.expanduser("~/Library/Messages/chat.db")):
