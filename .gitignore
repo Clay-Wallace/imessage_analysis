@@ -8,3 +8,9 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
+
+# HTML Output
+imessage_report.html
+
+# Contacts Cache File
+contacts_cache.json
