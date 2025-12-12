@@ -106,7 +106,7 @@ HTML_TEMPLATE = """
       </div>
 
       <div class="section">
-        <strong>Time period with highest frequency of sent messages:</strong> {rec_msg_period}
+        <strong>Time period with highest frequency of recieved messages:</strong> {rec_msg_period}
         <br>
         - {rec_period_percent}% of messages recieved during this time period
         <br>
